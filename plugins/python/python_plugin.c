@@ -332,7 +332,7 @@ void uwsgi_python_atexit() {
 		return;
 
 	// managing atexit in async mode is a real pain...skip it for now
-	if (uwsgi.async > 1)
+	if (uwsgi.async >= 1)
 		return;
 realstuff:
 
@@ -1092,7 +1092,7 @@ void uwsgi_python_init_apps() {
 	}
 
 	// prepare for stack suspend/resume
-	if (uwsgi.async > 1) {
+	if (uwsgi.async >= 1) {
 		up.current_recursion_depth = uwsgi_malloc(sizeof(int)*uwsgi.async);
         	up.current_frame = uwsgi_malloc(sizeof(struct _frame)*uwsgi.async);
 	}

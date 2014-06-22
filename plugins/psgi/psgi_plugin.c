@@ -158,7 +158,7 @@ SV *uwsgi_perl_call_stream(SV *func) {
         ENTER;
         SAVETMPS;
         PUSHMARK(SP);
-	if (uwsgi.threads > 1) {
+	if (uwsgi.threads >= 1) {
         	XPUSHs( sv_2mortal(newRV((SV*) ((SV **)wi->responder0)[wsgi_req->async_id])));
 	}
 	else {
@@ -363,7 +363,7 @@ SV *build_psgi_env(struct wsgi_request *wsgi_req) {
 
         if (!hv_store(env, "psgi.run_once", 13, newSViv(0), 0)) goto clear;
 
-        if (uwsgi.async > 1) {
+        if (uwsgi.async >= 1) {
                 if (!hv_store(env, "psgi.nonblocking", 16, newSViv(1), 0)) goto clear;
         }
         else {
@@ -584,7 +584,7 @@ int uwsgi_perl_request(struct wsgi_request *wsgi_req) {
 	}
 
 	while (psgi_response(wsgi_req, wsgi_req->async_result) != UWSGI_OK) {
-		if (uwsgi.async > 1) {
+		if (uwsgi.async >= 1) {
 			FREETMPS;
 			LEAVE;
 			return UWSGI_AGAIN;
@@ -814,7 +814,7 @@ static void uwsgi_perl_atexit() {
                 return;
 
         // managing atexit in async mode is a real pain...skip it for now
-        if (uwsgi.async > 1)
+        if (uwsgi.async >= 1)
                 return;
 realstuff:
 

@@ -105,7 +105,7 @@ void uwsgi_init_default() {
 
 	uwsgi.forkbomb_delay = 2;
 
-	uwsgi.async = 1;
+	uwsgi.async = 0;
 	uwsgi.listen_queue = 100;
 
 	uwsgi.cheaper_overload = 3;
@@ -407,7 +407,7 @@ pid_t uwsgi_daemonize2() {
 // fix/check related options
 void sanitize_args() {
 
-        if (uwsgi.async > 1) {
+        if (uwsgi.async >= 1) {
                 uwsgi.cores = uwsgi.async;
         }
 

@@ -94,7 +94,7 @@ void *uwsgi_request_subhandler_web3(struct wsgi_request *wsgi_req, struct uwsgi_
 
         PyDict_SetItemString(wsgi_req->async_environ, "uwsgi.version", wi->uwsgi_version);
 
-        if (uwsgi.cores > 1) {
+        if (uwsgi.cores >= 1) {
                 PyDict_SetItemString(wsgi_req->async_environ, "uwsgi.core", PyInt_FromLong(wsgi_req->async_id));
         }
 
@@ -164,7 +164,7 @@ int uwsgi_response_subhandler_web3(struct wsgi_request *wsgi_req) {
 			if (!wsgi_req->async_placeholder) {
 				goto clear;
 			}
-			if (uwsgi.async > 1) {
+			if (uwsgi.async >= 1) {
 				return UWSGI_AGAIN;
 			}
 		}

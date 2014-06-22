@@ -236,7 +236,7 @@ static int uwsgi_rados_request(struct wsgi_request *wsgi_req) {
 	// skip body on HEAD
 	if (uwsgi_strncmp(wsgi_req->method, wsgi_req->method_len, "HEAD", 4)) {
 		size_t remains = st.size;
-		if (uwsgi.async > 1) {
+		if (uwsgi.async >= 1) {
 			if (uwsgi_rados_read_async(wsgi_req, ctx, filename, remains)) goto end;
 		}
 		else {
