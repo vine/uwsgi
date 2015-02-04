@@ -1305,11 +1305,7 @@ void gracefully_kill_them_all(int signum) {
         uwsgi_unsubscribe_all();
 
         uwsgi_log_verbose("graceful shutdown triggered...\n");
-        struct uwsgi_socket *sock = uwsgi.sockets;
-        while (sock) {
-                close(sock->fd);
-                sock = sock->next;
-        }
+        uwsgi_close_all_sockets();
 
         int i;
         for (i = 1; i <= uwsgi.numproc; i++) {

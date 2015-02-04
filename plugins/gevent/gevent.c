@@ -61,14 +61,11 @@ PyObject *py_uwsgi_gevent_graceful(PyObject *self, PyObject *args) {
 	PyObject_CallMethod(ugevent.signal_watcher, "stop", NULL);
 
 	uwsgi_log_verbose("stopping gevent sockets watchers for worker %d (pid: %d)...\n", uwsgi.mywid, uwsgi.mypid);
-        struct uwsgi_socket *sock = uwsgi.sockets;
-        int i;
-        for (i=0;sock;i++) {
-            PyObject_CallMethod(ugevent.watchers[i], "stop", NULL);
-            close(sock->fd);
-            sock = sock->next;
-        }
-
+	int i,count = uwsgi_count_sockets(uwsgi.sockets);
+	for(i=0;i<count;i++) {
+		PyObject_CallMethod(ugevent.watchers[i], "stop", NULL);
+	}
+    uwsgi_close_all_sockets();
 	uwsgi_log_verbose("main gevent watchers stopped for worker %d (pid: %d)...\n", uwsgi.mywid, uwsgi.mypid);
 
 retry:
