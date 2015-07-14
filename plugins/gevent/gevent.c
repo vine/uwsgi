@@ -65,6 +65,7 @@ PyObject *py_uwsgi_gevent_graceful(PyObject *self, PyObject *args) {
 	for(i=0;i<count;i++) {
 		PyObject_CallMethod(ugevent.watchers[i], "stop", NULL);
 	}
+    uwsgi_close_all_sockets();
 	uwsgi_log_verbose("main gevent watchers stopped for worker %d (pid: %d)...\n", uwsgi.mywid, uwsgi.mypid);
 
 retry:
@@ -84,7 +85,7 @@ retry:
 	if (running_cores > 0) {
 		uwsgi_log_verbose("waiting for %d running requests on worker %d (pid: %d)...\n", running_cores, uwsgi.mywid, uwsgi.mypid);
 		PyObject *gevent_sleep_args = PyTuple_New(1);
-		PyTuple_SetItem(gevent_sleep_args, 0, PyInt_FromLong(1));
+		PyTuple_SetItem(gevent_sleep_args, 0, PyInt_FromLong(3));
 		PyObject *gswitch = python_call(ugevent.greenlet_switch, gevent_sleep_args, 0, NULL);
 		Py_DECREF(gswitch);
 		Py_DECREF(gevent_sleep_args);
